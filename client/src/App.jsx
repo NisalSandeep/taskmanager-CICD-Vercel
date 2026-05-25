@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import './TaskManager.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 export default function App() {
-  const [tasks, setTasks] = useState([]); dfkodfdf
+  const [tasks, setTasks] = useState([]); 
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(true);
 
