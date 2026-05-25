@@ -1,0 +1,63 @@
+name: CI — Test & Lint
+
+# Triggers: every push and every pull request
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── Job 1: Test the backend ──────────────────────────────────────
+  test-backend:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name:  Checkout code
+        uses: actions/checkout@v4
+
+      - name:  Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
+      - name:  Install server dependencies
+        run: npm install
+        working-directory: server
+
+      - name:  Run backend tests
+        run: npm test
+        working-directory: server
+
+  # ── Job 2: Build the frontend ────────────────────────────────────
+  build-frontend:
+    name: Frontend Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name:  Checkout code
+        uses: actions/checkout@v4
+
+      - name:  Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name:  Install client dependencies
+        run: npm install
+        working-directory: client
+
+      - name:  Build React app
+        run: npm run build
+        working-directory: client
+
+      - name:  Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: react-build
+          path: client/dist/
